@@ -1,0 +1,18 @@
+### 보안 (절대 올리지 마세요) ###
+.env
+*.key
+src/main/resources/application.yml
+
+### Java (Spring) ###
+.gradle/
+build/
+out/
+gradlew
+gradlew.bat
+.idea/
+
+### Python (FastAPI) ###
+__pycache__/
+venv/
+.pytest_cache/
+fapi/.env
