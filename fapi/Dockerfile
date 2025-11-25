@@ -4,6 +4,8 @@ FROM python:3.11-slim
 # 2. 작업 폴더 설정
 WORKDIR /app
 
+RUN pip install --upgrade pip
+
 # 3. 라이브러리 목록 복사 및 설치 (캐싱 효율을 위해 코드보다 먼저 함)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
