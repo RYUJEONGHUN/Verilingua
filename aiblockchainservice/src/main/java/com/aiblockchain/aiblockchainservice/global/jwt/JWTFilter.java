@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
@@ -50,8 +51,9 @@ public class JWTFilter extends OncePerRequestFilter {
                 .role(Role.valueOf(role))
                 .build();
 
+        Map<String, Object> attributes = Map.of("email", email);
         // 6. 시큐리티 세션에 강제 등록 (이 요청 동안만 로그인 상태 유지)
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(user, null); // attributes는 null
+        CustomOAuth2User customOAuth2User = new CustomOAuth2User(user, attributes);
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
