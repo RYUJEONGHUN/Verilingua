@@ -1,5 +1,9 @@
 package com.aiblockchain.aiblockchainservice.global.auth.handler;
 
+import com.aiblockchain.aiblockchainservice.domain.user.entity.User;
+import com.aiblockchain.aiblockchainservice.domain.user.repository.UserRepository;
+import com.aiblockchain.aiblockchainservice.domain.wallet.dto.WalletDto;
+import com.aiblockchain.aiblockchainservice.domain.wallet.service.WalletService;
 import com.aiblockchain.aiblockchainservice.global.auth.dto.CustomOAuth2User;
 import com.aiblockchain.aiblockchainservice.global.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
@@ -23,6 +27,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final JWTUtil jwtUtil;
     private final StringRedisTemplate redisTemplate; // Redis 사용!
+    private final UserRepository userRepository;
+    private final WalletService walletService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -31,6 +37,17 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
         String email = customUserDetails.getEmail();
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
+
+        User user=userRepository.findByEmail(email).orElseThrow();
+
+        if(user.getWalletAddress()==null){
+            WalletDto newWallet=walletService.createWallet();
+            user.registerWallet(newWallet.getWalletAddress(),newWallet.getPrivateKey());
+            userRepository.save(user);
+            log.info("✅ 지갑 생성 및 저장 완료: {}", newWallet.getWalletAddress());
+        }else {
+            log.info("👌 기존 지갑 보유 유저: {}", user.getWalletAddress());
+        }
 
         // 2. Access Token 생성 (1시간)
         String accessToken = jwtUtil.createJwt(email, role, 60 * 60 * 1000L);
