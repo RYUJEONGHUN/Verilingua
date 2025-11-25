@@ -31,6 +31,9 @@ public class User {
     @Column(unique = true)
     private String walletAddress;
 
+    //개인키 저장
+    private String privateKey;
+
     // OAuth 제공자 정보 (google, sub)
     private String provider;
     private String providerId;
@@ -50,8 +53,9 @@ public class User {
         this.name = name;
     }
 
-    public void registerWallet(String walletAddress) {
+    public void registerWallet(String walletAddress, String privateKey) {
         this.walletAddress = walletAddress;
+        this.privateKey = privateKey;
     }
 
     public String getRoleKey() {
