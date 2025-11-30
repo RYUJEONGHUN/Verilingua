@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # --- 1. PostgreSQL 데이터베이스 ---
+  postgres:
+    image: postgres:15-alpine
+    container_name: verilingua-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: verilingua
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # --- 2. Redis ---
+  redis:
+    image: redis:alpine
+    container_name: verilingua-redis
+    ports:
+      - "6379:6379"
+
+  # --- 3. Spring Boot 서버 ---
+  app:
+    build: .
+    container_name: verilingua-server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+      - fastapi-app
+    environment:
+      DB_HOST: postgres
+      DB_NAME: verilingua
+      DB_USER: postgres
+      DB_PASSWORD: 1234
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+
+      FASTAPI_URL: "http://verilingua-fastapi:8000"
+
+  fastapi-app:
+    container_name: verilingua-fastapi
+    build:
+      context: ../fapi # FastAPI 폴더 경로를 정확히 지정
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ../fapi:/app
+
+volumes:
+  postgres_data:

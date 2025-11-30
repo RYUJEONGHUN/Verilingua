@@ -17,12 +17,13 @@ public class AiTestController {
 
     private final WebClient.Builder webClientBuilder;
 
+    @Value("${fastapi.url}")
+    private String fastapiUrl;
 
     // 이제 Postman에서 Body에 JSON을 담아서 보내야 합니다.
     @PostMapping("/test/ai")
     public ResponseEntity<?> testAiConnection(@RequestBody AiDto.JudgeRequest request) {
 
-        String fastapiUrl = "http://verilingua-fastapi:8000";
         String requestUrl = fastapiUrl + "/api/v1/ai/judge";
 
         log.info("🚀 Spring -> FastAPI 요청 주소: {}", requestUrl);

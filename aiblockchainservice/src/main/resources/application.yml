@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: verilingua-server
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:verilingua}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+
+  data:
+    redis:
+      host: redis # 도커 서비스 이름
+      port: 6379
+
+  jpa:
+    defer-datasource-initialization: true # DB 켜진 뒤 데이터 넣기
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always # data.sql 항상 실행
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:8080/login/oauth2/code/google}"
+
+jwt:
+  secret: ${JWT_SECRET}
+
+fastapi:
+  url: "http://verilingua-fastapi:8000"

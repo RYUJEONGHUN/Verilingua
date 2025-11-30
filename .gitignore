@@ -1,7 +1,6 @@
 ### 보안 (절대 올리지 마세요) ###
 .env
 *.key
-src/main/resources/application.yml
 
 ### Java (Spring) ###
 .gradle/

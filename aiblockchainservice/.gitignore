@@ -36,14 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 
-
-
-
-### 🚨 보안상 중요한 파일 (절대 올리지 않음!) ###
-# 1. 실제 설정 파일 무시
-src/main/resources/application.yml
-# 2. 도커 설정 파일 무시 (비번 들어있음)
-docker-compose.yml
-# 3. 맥/윈도우 시스템 파일
+.env
+*.env
 .DS_Store
 Thumbs.db
