@@ -73,12 +73,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //        .queryParam("accessToken", accessToken)
         //        .build().toUriString();
 
-        String frontendBaseUrl = "https://verilingua-front.vercel.app";
         String targetUrl = UriComponentsBuilder.fromUriString(
-                        frontendBaseUrl + "/oauth/callback")
+                        "https://verilingua-front.vercel.app")   // ← /oauth/callback 제거
                 .queryParam("accessToken", accessToken)
                 .build()
                 .toUriString();
+
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }
