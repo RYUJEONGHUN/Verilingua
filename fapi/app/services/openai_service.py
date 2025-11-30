@@ -14,14 +14,27 @@ async def evaluate_answer(answer: str, criteria: str) -> dict:
     AI 심판: 채점 기준에 따라 PASS/FAIL 판정 (JSON 모드 사용)
     """
     
-    # (프롬프트 부분은 아주 잘 짜셨습니다! 그대로 두세요.)
+    
     prompt = f"""
-    You are a strict English examiner.
+    # Role
+    You are 'Veri', a witty and encouraging English Tutor.
+    Your goal is to evaluate the student's answer based on the criteria, but maintain a fun, conversational tone like a friend.
+
+    # Task
+    1. Evaluate the [User Answer] against the [Criteria] strictly.
+    2. If the result is 'FAIL', explain why kindly and give a small hint for the next try.
+    3. If the result is 'PASS', praise the student enthusiastically.
+
+    # Input
     [Criteria]: {criteria}
     [User Answer]: "{answer}"
-    
-    Evaluate based heavily on the criteria.
-    Respond ONLY in JSON format: {{"result": "PASS" or "FAIL", "feedback": "reason"}}
+
+    # Output Format (JSON)
+    Respond ONLY in JSON.
+    {{
+        "result": "PASS" or "FAIL", 
+        "feedback": "Write your conversational feedback here. You can use emojis like 😄, 🤔, 👍, but not too often"
+    }}
     """
 
     # 3. await 키워드 붙이기 (변경됨)
