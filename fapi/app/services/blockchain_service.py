@@ -10,6 +10,8 @@ PRIVATE_KEY = os.getenv("WALLET_PRIVATE_KEY") # 배포자(Admin) 개인키
 CONTRACT_ADDRESS = os.getenv("SBT_CONTRACT_ADDRESS")
 RPC_URL = "https://1rpc.io/sepolia" # 또는 아까 쓴 1rpc 등
 
+L1_TOKEN_URI = os.getenv("L1_TOKEN_URI") 
+
 # ABI 로드 (파일 위치 주의: app/.. 경로에 맞게 수정)
 with open("VeriLinguaSBT.json", "r") as f:
     contract_data = json.load(f)
@@ -48,11 +50,15 @@ def mint_sbt(to_address: str) -> str:
     # 주의: 가스비가 부족하면 실패하니 넉넉하게 설정
     nonce = w3.eth.get_transaction_count(admin_account.address)
     
-    tx = contract.functions.safeMint(to_address).build_transaction({
-        'from': admin_account.address,
-        'nonce': nonce,
-        'gas': 500000,       # 가스 한도
-        'gasPrice': w3.eth.gas_price
+     # 🔹 여기서 safeMint에 uri까지 같이 전달
+    tx = contract.functions.safeMint(
+        to_address,
+        L1_TOKEN_URI
+    ).build_transaction({
+        "from": admin_account.address,
+        "nonce": nonce,
+        "gas": 500000,
+        "gasPrice": w3.eth.gas_price,
     })
     
     # 4. 서명 및 전송
