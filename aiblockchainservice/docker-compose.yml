@@ -2,17 +2,17 @@ version: '3.8'
 
 services:
   # --- 1. PostgreSQL 데이터베이스 ---
-  postgres:
-    image: postgres:15-alpine
-    container_name: verilingua-db
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: verilingua
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+  #postgres:
+  #  image: postgres:15-alpine
+  #  container_name: verilingua-db
+  #  ports:
+  #    - "5432:5432"
+  #  environment:
+  #    POSTGRES_DB: verilingua
+  #    POSTGRES_USER: postgres
+  #    POSTGRES_PASSWORD: 1234
+  #  volumes:
+  #    - postgres_data:/var/lib/postgresql/data
 
   # --- 2. Redis ---
   redis:
