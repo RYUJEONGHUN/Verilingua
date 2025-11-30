@@ -21,7 +21,7 @@ public class WalletService {
 
     public WalletDto createWallet() {
         String requestUrl = fastapiUrl + "/api/v1/blockchain/create";
-        log.info("🚀 지갑 생성 요청: {}", requestUrl);
+        log.info(" 지갑 생성 요청: {}", requestUrl);
 
         try {
             return webClientBuilder.build()
@@ -36,10 +36,10 @@ public class WalletService {
         }
     }
 
-    // 🚀 [추가] SBT 발행 요청
+    // SBT 발행 요청
     public String mintSBT(String walletAddress) {
         String requestUrl = fastapiUrl + "/api/v1/blockchain/mint";
-        log.info("🏆 SBT 발행 요청 중... 대상: {}", walletAddress);
+        log.info(" SBT 발행 요청 중... 대상: {}", walletAddress);
 
         // 보낼 데이터 (JSON)
         Map<String, String> body = Map.of("target_address", walletAddress);
