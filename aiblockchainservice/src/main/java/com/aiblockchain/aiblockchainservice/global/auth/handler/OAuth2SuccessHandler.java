@@ -67,11 +67,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 5. 프론트엔드로 리다이렉트 (Access Token만 쿼리 파라미터로 전달)
         // 주의: http://localhost:8080/login-success 는 임시 확인용 주소입니다.
-        // 나중에 React 개발 시 http://localhost:3000/oauth/callback 등으로 변경해야 합니다.
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth/callback")
-                .queryParam("accessToken", accessToken)
-                .build().toUriString();
 
+        // 로컬전용
+        //String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth/callback")
+        //        .queryParam("accessToken", accessToken)
+        //        .build().toUriString();
+
+        String frontendBaseUrl = "https://verilingua-front.vercel.app";
+        String targetUrl = UriComponentsBuilder.fromUriString(
+                        frontendBaseUrl + "/oauth/callback")
+                .queryParam("accessToken", accessToken)
+                .build()
+                .toUriString();
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

@@ -16,6 +16,7 @@ public class CorsConfig {
 
         config.setAllowCredentials(true); // 내 서버가 응답할 때 json을 자바스크립트에서 처리할 수 있게 할지를 설정
         config.addAllowedOrigin("http://localhost:5173"); // 프론트엔드 주소 허용
+        config.addAllowedOrigin("https://verilingua-front.vercel.app");
         config.addAllowedHeader("*"); // 모든 header 허용
         config.addAllowedMethod("*"); // 모든 method(GET, POST, PUT...) 허용
 
