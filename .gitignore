@@ -6,8 +6,6 @@
 .gradle/
 build/
 out/
-gradlew
-gradlew.bat
 .idea/
 
 ### Python (FastAPI) ###
