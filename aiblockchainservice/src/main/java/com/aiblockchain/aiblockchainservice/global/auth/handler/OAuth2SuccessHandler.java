@@ -44,10 +44,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             WalletDto newWallet=walletService.createWallet();
             user.registerWallet(newWallet.getWalletAddress(),newWallet.getPrivateKey());
             userRepository.save(user);
-            log.info("✅ 지갑 생성 및 저장 완료: {}", newWallet.getWalletAddress());
+            log.info(" 지갑 생성 및 저장 완료: {}", newWallet.getWalletAddress());
         }else {
-            log.info("👌 기존 지갑 보유 유저: {}", user.getWalletAddress());
+            log.info(" 기존 지갑 보유 유저: {}", user.getWalletAddress());
         }
+        user.failChallenge(); //  currentQuestStep=0
+        userRepository.save(user);
+
+        log.info(" 유저 퀘스트 상태 초기화 완료: {}", email);
 
         // 2. Access Token 생성 (1시간)
         String accessToken = jwtUtil.createJwt(email, role, 60 * 60 * 1000L);
@@ -59,12 +63,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         redisTemplate.opsForValue()
                 .set("RT:" + email, refreshToken, 14, TimeUnit.DAYS);
 
-        log.info("✅ 로그인 성공! Access Token 발급, Refresh Token Redis 저장 완료. Email: {}", email);
+        log.info(" 로그인 성공! Access Token 발급, Refresh Token Redis 저장 완료. Email: {}", email);
 
         // 5. 프론트엔드로 리다이렉트 (Access Token만 쿼리 파라미터로 전달)
         // 주의: http://localhost:8080/login-success 는 임시 확인용 주소입니다.
         // 나중에 React 개발 시 http://localhost:3000/oauth/callback 등으로 변경해야 합니다.
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/login-success")
+        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth/callback")
                 .queryParam("accessToken", accessToken)
                 .build().toUriString();
 
