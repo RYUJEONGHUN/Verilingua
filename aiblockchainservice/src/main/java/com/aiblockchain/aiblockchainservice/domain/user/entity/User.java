@@ -82,6 +82,12 @@ public class User {
     }
 
     public void failChallenge() {
+        // 레벨은 그대로 둡니다 (this.currentChallengeLevel 유지)
+        this.currentQuestStep = 0; // 단계만 0(1번 문제)으로 리셋
+    }
+
+    // (참고) 아예 퀘스트를 포기하고 나갈 때 쓸 메서드를 따로 만들어두면 좋습니다.
+    public void quitChallenge() {
         this.currentChallengeLevel = null;
         this.currentQuestStep = 0;
     }

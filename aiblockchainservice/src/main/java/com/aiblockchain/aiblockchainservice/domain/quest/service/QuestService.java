@@ -1,6 +1,7 @@
 package com.aiblockchain.aiblockchainservice.domain.quest.service;
 
 import com.aiblockchain.aiblockchainservice.domain.quest.dto.AiDto;
+import com.aiblockchain.aiblockchainservice.domain.quest.dto.QuestDto;
 import com.aiblockchain.aiblockchainservice.domain.quest.entity.Quest;
 import com.aiblockchain.aiblockchainservice.domain.quest.entity.QuestLog;
 import com.aiblockchain.aiblockchainservice.domain.quest.repository.QuestLogRepository;
@@ -59,7 +60,7 @@ public class QuestService {
         // . 유저 상태 업데이트 (One Miss Out 로직)
         if ("PASS".equals(aiResponse.getResult())) {
             user.progressNextStep(); // 다음 단계로!
-            // 🚀 [핵심] 마지막 퀘스트(예: 3번)를 깼다면? -> 보상 지급!
+            //  마지막 퀘스트(예: 3번)를 깼다면? -> 보상 지급!
             if (user.getCurrentQuestStep() >= 3) {
                 log.info("🎉 모든 퀘스트 완료! SBT를 발행합니다.");
 
@@ -78,5 +79,39 @@ public class QuestService {
         userRepository.save(user);
 
         return aiResponse;
+    }
+    // 레벨 도전 시작 (게이팅 로직 포함)
+    @Transactional
+    public void startChallenge(String email, int level) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+
+        // L2 잠금 해제 조건 확인
+        if (level == 2) {
+            if (user.getL1TokenCount() < 3) {
+                throw new IllegalArgumentException("L1 토큰이 3개 이상 필요합니다!");
+            }
+        }
+
+        // 도전 상태 설정 (1단계부터 시작)
+        user.startChallenge(level);
+        userRepository.save(user);
+    }
+
+    //  현재 풀어야 할 문제 가져오기
+    @Transactional(readOnly = true)
+    public QuestDto getCurrentQuest(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+
+        if (user.getCurrentChallengeLevel() == null) {
+            return null; // 진행 중인 퀘스트 없음
+        }
+
+        // 유저의 현재 상태(Level, Step)에 맞는 퀘스트 DB에서 조회
+        // (Step은 0부터 시작하므로, 문제는 Step + 1을 가져와야 함)
+        int nextStep = user.getCurrentQuestStep() + 1;
+
+        return questRepository.findByLevelAndStep(user.getCurrentChallengeLevel(), nextStep)
+                .map(quest -> new QuestDto(quest.getId(), quest.getTitle(), quest.getContent()))
+                .orElse(null); // 더 이상 문제가 없으면(다 깬 경우) null
     }
 }
