@@ -27,15 +27,16 @@ services:
     container_name: verilingua-server
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     depends_on:
-      - postgres
       - redis
       - fastapi-app
     environment:
-      DB_HOST: postgres
-      DB_NAME: verilingua
-      DB_USER: postgres
-      DB_PASSWORD: 1234
+      #DB_HOST: postgres
+      #DB_NAME: verilingua
+      #DB_USER: postgres
+      #DB_PASSWORD: 1234
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
 
@@ -52,6 +53,8 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
       - ../fapi:/app
+    env_file:          #추가
+      - ../fapi/.env
 
 volumes:
   postgres_data:
