@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
 //cicd 테스트
+//cicd 테스트2
 @Slf4j
 @Service
 @RequiredArgsConstructor
