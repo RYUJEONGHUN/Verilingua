@@ -23,8 +23,6 @@ OpenAI GPT-4를 활용하여 단순 정답 매칭이 아닌, 문맥과 의도를
 
 사용자의 답변에 대해 PASS/FAIL 판정뿐만 아니라, 구체적인 피드백과 교정을 실시간으로 제공합니다.
 
-RAG (Retrieval-Augmented Generation)를 적용하여, 사용자의 과거 오답 기록을 바탕으로 개인화된 조언을 제공합니다.  
-
 
 
 ### 2. Invisible Wallet (지갑 자동 생성)
@@ -70,7 +68,7 @@ PostgreSQL, Spring Data JPA, Redis (세션/캐시, 토큰/로그 관리)<br></br
 
 ### AI Server (Evaluation & Chat)
 
-FastAPI, OpenAI API (GPT-4o, Whisper), RAG, LangChain 기반 프롬프트/체인 구성<br></br>
+FastAPI, OpenAI API (GPT-4o, Whisper)<br></br>
 
 
 ### Blockchain & Web3
